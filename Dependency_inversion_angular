@@ -1,0 +1,29 @@
+1
+interface
+    export interface IDispatch {
+    menu_dispatch(data: any): any
+    }
+    
+    2 implements
+    export class StoreDispatchService implements IDispatch{
+      menu_dispatch(data:any){
+    this.Menu.dispatch(Menu_change_action({value:data}))
+      }
+    }
+    3 create injection
+    export const IDISPATCH = new InjectionToken<IDispatch>('IDispatch')
+    
+  4th inject into component
+    @Component({
+  selector: 'app-travel-list',
+  templateUrl: './travel-list.component.html',
+  styleUrls: ['./travel-list.component.css'],
+  providers:[
+    { provide: IDISPATCH, useClass: StoreDispatchService },
+  ]
+  })
+  constructor( @Inject(IDISPATCH) private dispatch: StoreDispatchService){}
+  
+  CallInjection(data:any){
+  this.dispatch.menu_dispatch(data)
+  }
