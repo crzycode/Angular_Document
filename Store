@@ -1,0 +1,39 @@
+
+1st Create State
+
+export interface event_data{
+    event:any;
+}
+2nd create action 
+export const event_edit_action = createAction('event_edit_action',props<{value:any}>())
+
+3rd create reducer
+
+export const event_edit_:event_data[]=[]
+
+export const _edit_event_reducer = createReducer(event_edit_,on(event_edit_action,(state, action) => {
+  console.log(action.value)
+  return {
+    ...state,
+    event:action.value
+  }
+})
+)
+
+export function edit_event_reducer(state:any, action:any) {
+  return _edit_event_reducer(state, action);
+}
+
+4th create selector
+const event_edit_ = createFeatureSelector<event_data>('event_edit')
+
+export const edit_event_selector = createSelector(event_edit_, state => {
+  return state.event
+})
+
+5th initialize in app.module
+    StoreModule.forRoot({event_edit:edit_event_reducer}, {}),
+    
+    6th 
+    constructor( private store: Store<{ event_edit: event_data }>,){}
+ 
