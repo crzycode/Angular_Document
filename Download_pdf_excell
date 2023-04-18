@@ -1,0 +1,45 @@
+
+  downloadAsPDF() {
+    const doc = new jsPDF();
+
+
+    let DATA: any = document.getElementById('htmlData');
+    html2canvas(DATA).then((canvas) => {
+      let fileWidth = 200;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+      const FILEURI = canvas.toDataURL('image/png');
+      let PDF = new jsPDF('p', 'mm', 'a4');
+      let position = 0;
+      PDF.addImage(FILEURI, 'PNG', 0, position, fileWidth, fileHeight);
+      PDF.save('angular-demo.pdf');
+    });
+  }
+  downloadExcell() {
+    // const ws: xlsx.WorkSheet =
+    //   xlsx.utils.table_to_sheet(this.epltable.nativeElement);
+    var list_: any[] = []
+    for (let i = 0; i < this.pagedItems.length; i++) {
+      var data= {
+        Debited_to: this.pagedItems[i].debit_to,
+        Company_name: this.pagedItems[i].company_name,
+        Employee_Name: this.pagedItems[i].emp_name,
+        Event: this.pagedItems[i].event,
+
+        Travel: this.pagedItems[i].travel,
+        From_date: this.pagedItems[i].from_date,
+        To_Date: this.pagedItems[i].to_date,
+        Authorised_by: this.pagedItems[i].authorized_by,
+
+        Passed_to: this.pagedItems[i].passed_to,
+        Status: this.pagedItems[i].status,
+
+      }
+      list_.push(data)
+    }
+    console.log(this.pagedItems)
+    const ws: xlsx.WorkSheet =
+      xlsx.utils.json_to_sheet(list_);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+    xlsx.writeFile(wb, 'epltable.xlsx');
+  }
