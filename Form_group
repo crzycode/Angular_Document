@@ -1,0 +1,30 @@
+dependency
+    ReactiveFormsModule,
+    FormsModule,
+    
+    import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
+export class TravelFormComponent implements OnInit {
+ travel_form!: FormGroup
+  constructor(private fb: FormBuilder) { }
+  
+  
+  ngOnInit(): void {
+
+    this.travel_form = this.fb.group({
+      company_name: [''],
+      emp_name: [''],
+
+    })
+
+  }
+}
+
+
+Html
+
+ <form [formGroup]="travel_form" class="travel_form">
+<input formControlName="company_name" type="text" placeholder="">
+<input formControlName="emp_name" placeholder="">
+</form>
