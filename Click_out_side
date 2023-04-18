@@ -1,0 +1,51 @@
+import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+
+@Directive({
+  selector: '[passport]'
+})
+export class pass_ClickedOutsideDirective {
+
+  constructor(private el:ElementRef) { }
+
+  @Output() public clickoutside = new EventEmitter();
+@HostListener('document:click',['$event.target'])
+  public onClick(target:any){
+
+    const clickedInside = this.el.nativeElement.contains(target);
+    if(!clickedInside){
+      this.clickoutside.emit(target)
+    }
+  }
+
+}
+
+
+ <div class="icon_input_text_field d-flex align-items-center position-relative w-100"
+                            (click)="dropdown('nationality')" passport (clickoutside)="click_outside('nationality')">
+                            <input formControlName="nationality" (keyup)="filter_airbooking($event,'nationality')"
+                                class="input_text w-100" style="    padding-right: 35px; font-size: 13px; font-weight: 600; height: 28px; cursor:pointer;"
+                                type="text" placeholder="">
+                            <!-- <span class="selector_icon_click">
+                                <img class="selector_icon" src="../../../assets/selector_icon.svg" alt="">
+                            </span> -->
+                </div>
+
+
+ click_outside(type: any) {
+    if (type == 'company') {
+      this.drop_down_selector_company = false;
+    }
+    if (type == 'nation') {
+      this.drop_down_selector_nationality = false;
+    }
+    if (type == 'emp_name') {
+      this.search_by_company = false;
+
+    }
+    if (type == 'nationality') {
+      this.drop_down_selector_country = false;
+
+    }
+
+
+  }
