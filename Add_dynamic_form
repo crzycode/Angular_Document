@@ -1,0 +1,126 @@
+
+
+  this.travel_form = this.fb.group({
+      entries: this.fb.array([
+        this.fb.group({
+          exp_type: [''],
+          remark: [''],
+          payable_amount: ['']
+        })
+      ]),
+
+    })
+    
+  Not That Important
+  show_entry(id: any) {
+    this.entries = !this.entries
+
+    $('.sub_entry' + id).css('display', 'block');
+    $('.sub_entry' + this.misc_css).css('display', 'none');
+
+    if (this.misc_css != id) {
+      $('.sub_entry' + id).css('display', 'block');
+      this.misc_css = id;
+    } else {
+      if (this.entries) {
+        $('.sub_entry' + id).css('display', 'block');
+      }
+      else {
+        $('.sub_entry' + id).css('display', 'none');
+      }
+
+    }
+  }
+  add_misc() {
+    const control = <FormArray>this.travel_form.controls['entries'];
+    control.push(this.fb.group({
+      exp_type: [''],
+      remark: [''],
+      payable_amount: ['']
+    }))
+
+    var data:any = this.travel_form.value;
+    console.log(data.entries.length)
+    
+    if(data.entries.length >= 2){
+      this.button_enable = true
+    }else{
+      this.button_enable = false
+    }
+
+  }
+
+  getControls() {
+    return (this.travel_form.get('entries') as FormArray).controls;
+  }
+  removemisc_form(id: any) {
+    const control = <FormArray>this.travel_form.controls['entries'];
+    var i = id + 1
+    console.log(id);
+    control.removeAt(id);
+    var data:any = this.travel_form.value;
+    console.log(data.entries.length)
+    
+    if(data.entries.length >= 2){
+      this.button_enable = true
+    }else{
+      this.button_enable = false
+    }
+  }
+  
+  
+  
+  
+  
+  
+    <div *ngIf="misc_form_" formArrayName="entries" class=" row px-4 p-2 align-items-center position-relative"
+                style="overflow: auto; max-height: 150px;">
+                <div *ngFor="let child of getControls() ; let i = index" class="expenses_add_form">
+                    <div formGroupName="{{i}}">
+                        <div class="row">
+                            <div class=" col-2 input_fields p-1 position-relative">
+                                <div class="feild_title px-2 exptype{{i}}">Type of expense</div>
+                                <div
+                                    class="icon_input_text_field d-flex align-items-center position-relative w-100">
+                                    <input class="input_text w-100" formControlName="exp_type"
+                                        style="    padding-right: 35px; font-size: 13px; font-weight: 600; height: 28px;"
+                                        type="text" placeholder="Expense Type">
+                                </div>
+
+                            </div>
+                            <div class=" col-2 input_fields p-1 position-relative">
+                                <div class="feild_title px-2 expdetails{{i}}">Expense in detail</div>
+                                <div
+                                    class="icon_input_text_field d-flex align-items-center position-relative w-100">
+                                    <input class="input_text w-100" formControlName="remark"
+                                        style="    padding-right: 35px; font-size: 13px; font-weight: 600; height: 28px;"
+                                        type="text" placeholder="Details">
+                                </div>
+
+                            </div>
+                            <div class=" col-2 input_fields p-1 position-relative">
+                                <div class="feild_title px-2 billing{{i}}">Billing (INR)</div>
+                                <div
+                                    class="icon_input_text_field d-flex align-items-center position-relative w-100">
+                                    <input class="input_text w-100 bill{{i}}" formControlName="payable_amount"
+                                        style="    padding-right: 35px;font-size: 13px; font-weight: 600; height: 28px;"
+                                        type="number" placeholder="Bill">
+                                </div>
+
+                            </div>
+                            <div  class=" col-2 input_fields p-1 position-relative">
+                                <button mat-raised-button *ngIf="button_enable"
+                                    style="background: #2A7B9B; color:white; border-radius: 5px;"
+                                    (click)="removemisc_form(i)">-</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class=" col-2 input_fields p-1 position-relative">
+                    <button mat-raised-button style="background: #2A7B9B; color:white; border-radius: 5px;"
+                        (click)="add_misc()">+</button>
+                </div>
+                </div>
