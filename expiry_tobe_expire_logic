@@ -1,0 +1,39 @@
+   this.http.get(this.url.base+'employeevisa/').subscribe(res =>{
+      var data:any = res
+      for(let i =0; i<data.data.length; i++){
+        var expired = new Date(data.data[i].validity)
+       var current_date = new Date(); 
+       var before_date =  new Date(new Date().setMonth(new Date().getMonth() + 6))
+       if(expired < before_date && expired > current_date){
+        this.tobeexpired_visa++
+       }
+       if(expired < current_date){
+        this.expired_visa++
+       }
+       this.notification = this.tobeexpired_visa+this.expired_visa
+      }
+  
+    
+    }
+    )
+    this.http.get(this.url.base+'employeepassport/').subscribe(res =>{
+      var data:any = res
+      for(let i =0; i<data.data.length; i++){
+        var expired = new Date(data.data[i].expire_date)
+       
+       var current_date = new Date(); 
+
+       var before_date =  new Date(new Date().setMonth(new Date().getMonth() + 6))
+   
+       if(expired < before_date && expired > current_date){
+        this.tobeexpired_pass++
+       }
+       if(expired < current_date){
+        this.expired_pass++
+       }
+     
+
+      }
+      this.notification = this.notification+this.tobeexpired_pass+this.expired_pass
+    }
+    )
