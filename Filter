@@ -1,0 +1,137 @@
+//import { Component, VERSION } from '@angular/core';
+import {
+  AfterViewInit,
+  VERSION,
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef
+} from '@angular/core';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
+import 'rxjs/add/operator/map';
+import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
+let start, test2, end, recordsTotal, displayRecords;
+let dataUrl, pageInfo1;
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent implements OnInit {
+  @ViewChild(DataTableDirective)
+  datatableElement: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+  persons: any = [];
+  persons1: any = [];
+  persons2: any = [];
+  persons3: any = [];
+  displaying_persons: any = [];
+  dtTrigger: Subject<any> = new Subject();
+  isChecked: boolean = false;
+  pageInfo: any = {};
+
+  dtElement: DataTableDirective;
+  dtInstance: DataTables.Api;
+
+  constructor(private http: HttpClient, private cdRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    let self = this;
+    this.dtOptions = {
+      pagingType: 'simple_numbers',
+      pageLength: 40,
+      scrollCollapse: true,
+      processing: true,
+      destroy: true,
+      scrollY: '50vh',
+      stateSave: true,
+      columns: [
+        { name: '' },
+        { data: 'index' },
+        { data: 'firstname' },
+        { data: 'lastname' }
+      ],
+      columnDefs: [
+        {
+          width: '10% !important;',
+          targets: 0,
+          searchable: false,
+          orderable: false,
+          className: 'dt-body-center'
+        }
+      ],
+      drawCallback: () => {
+        $('.paginate_button.next').on('click', () => {
+          this.nextButtonClickEvent();
+        });
+        
+        $('select[name="firstTable_length"]').on('change', () => {
+          this.loadSearchTableData();
+        });
+      },
+      infoCallback: function() {
+        var api = this.api();
+        pageInfo1 = api.page.info();
+      }
+    };
+  }
+  loadTable() {
+    let params = new HttpParams();
+    dataUrl =
+      'https://raw.githubusercontent.com/l-lin/angular-datatables/master/demo/src/data/data.json';
+
+    this.http.get(dataUrl).subscribe(response => {
+      this.persons = response.data;
+      this.persons.forEach(f => (f.checked = false));
+      this.dtTrigger.next();
+      // this.loadFreshData();
+    });
+  }
+  nextButtonClickEvent() {
+    this.persons1 = this.persons;
+    $('#firstTable')
+      .DataTable()
+      .destroy();
+    this.http.get(dataUrl).subscribe(response => {
+      this.persons3 = response.data;
+      this.persons2 = this.persons1.concat(this.persons3);
+      this.persons = this.persons2;
+      this.dtTrigger.next();
+    });
+  }
+  loadSearchTableData() {
+    alert(pageInfo1.length);
+    //need to call the API based onthe pagelength option for loading the data    
+  }
+}
+
+
+
+<div>
+ <div>Count::<span>{{ checkboxCheckCount }}</span><div>
+
+   <button (click)="loadTable()">Load Table</button>
+   <!-- <button (click)="getAllrecords()">Next</button> -->
+
+
+<div>
+<table datatable id="firstTable" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" >
+  <thead>
+  <tr>
+    <th><input type="checkbox" (click)="checkuncheckall()" [checked]="isChecked"></th>
+    <th>Amount</th>
+    <th>First name</th>
+    <th>Last name</th>
+  </tr>
+</thead>
+<tbody id="dummy">
+  <tr *ngFor="let person of persons">
+     		<td><input type="checkbox" [disabled]="person.firstName === 'Superman'" class="checkboxCls" [(ngModel)]="person.checked"></td>
+    <td>{{ person.id }}</td>
+    <td>{{ person.firstName }}</td>
+    <td>{{ person.lastName }}</td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
