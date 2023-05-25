@@ -1,0 +1,8 @@
+  var dataIsObj ={
+    name:‘ashutosh,’,
+    location:‘Uttar Pradesh’,
+    user:‘not authorized’,
+    isCheck:false
+  }
+  let va= Object.values(dataIsObj); -- get the value in array form
+  let a= Object.entries(dataIsObj) --  key and value in seprate array 
