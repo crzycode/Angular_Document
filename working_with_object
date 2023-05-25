@@ -6,3 +6,16 @@
   }
   let va= Object.values(dataIsObj); -- get the value in array form
   let a= Object.entries(dataIsObj) --  key and value in seprate array 
+  
+  const new_data: { name?: string , std?:string} =
+//   {
+//     name: ‘Bobby Hadz’,
+//     std:‘11’
+// };
+
+interface Person {
+  name?: string;
+}
+const obj: Person = { name: ‘Bobby Hadz’ };
+delete obj[‘name’];
+console.log(obj); // :point_right:️ {}
