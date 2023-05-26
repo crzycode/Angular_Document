@@ -1,0 +1,17 @@
+tyepeWriter(data:any){
+  console.log(data);
+  let root = <HTMLElement>document.getElementById(‘type_writer_js’)
+  // var out_puts=document.getElementById(‘type_writer_js’);
+  // var prints = ‘The original incarnation of Yahoo! Inc. was an American multinational technology company headquartered in Sunnyvale, California. Yahoo was founded by Jerry Yang and David Filo in January 1994 and was incorporated on March 2, 1995. Yahoo was one of the pioneers of the early internet era in the lorem ipsum dolor sit amet, consectetur adip lorem ipsum’
+var prints = data
+  let i=0;
+  const interVall=setInterval(function(){
+    root.innerHTML += prints[i]
+    i++;
+      if(i==prints.length){
+        clearInterval(interVall)
+      }
+  },50)
+  // html
+  // <div id=“type_writer_js” style=“width: 89%; background: greenyellow;“></div>
+}
