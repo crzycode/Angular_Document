@@ -1,0 +1,8 @@
+ng add @angular-eslint/schematics@14
+@angular-devkit/core         11.2.18
+@angular-devkit/schematics   11.2.18 
+ --same version is mendatory
+
+ng new onbazar --create-application false  -- create work space 
+ng g application app -- multiple application create 
+ng add @angular-architects/module-federation --project app --port 4000 -- do this with every project
