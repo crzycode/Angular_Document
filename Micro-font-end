@@ -34,5 +34,147 @@ exposedModule:"./AppModule"
 })
 export class AppRoutingModule { }
 
+web config file 
+
+
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const mf = require("@angular-architects/module-federation/webpack");
+const path = require("path");
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+  path.join(__dirname, '../../tsconfig.json'),
+  [/* mapped paths to share */]);
+
+module.exports = {
+  output: {
+    uniqueName: "shell",
+    publicPath: "auto",
+    scriptType:"text/javascript"
+  },
+  optimization: {
+    runtimeChunk: false
+  },
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases(),
+    }
+  },
+  experiments: {
+    outputModule: true
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+
+
+        // For remotes (please adjust)
+        name: "shell",
+        // filename: "remoteEntry.js",
+        // exposes: {
+        //     './Component': './projects/shell/src/app/app.component.ts',
+        // },
+
+        // For hosts (please adjust)
+        remotes: {
+            "mfe1": "mfe1@http://localhost:3000/remoteEntry.js",
+            "mfe2": "mfe1@http://localhost:3000/remoteEntry.js",
+
+        },
+
+        shared: share({
+          "@angular/core": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+          "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+          "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+          "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+
+          ...sharedMappings.getDescriptors()
+        })
+
+    }),
+    sharedMappings.getPlugin()
+  ],
+};
+
+
+mef -- file
+
+import { Practice1Module } from './practice1/practice1.module';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AppComponent } from './app.component';
+
+const routes: Routes = [
+  {path: '',component: AppComponent},
+  {path: 'practice',
+loadChildren: () =>import('./practice1/practice1.module').then(m => m.Practice1Module)}
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+--- web config  mfe
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const mf = require("@angular-architects/module-federation/webpack");
+const path = require("path");
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+  path.join(__dirname, '../../tsconfig.json'),
+  [/* mapped paths to share */]);
+
+module.exports = {
+  output: {
+    uniqueName: "mfe1",
+    publicPath: "auto",
+    scriptType:"text/javascript",
+  },
+  optimization: {
+    runtimeChunk: false
+  },
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases(),
+    }
+  },
+  experiments: {
+    outputModule: true
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+
+
+        // For remotes (please adjust)
+        name: "mfe1",
+        filename: "remoteEntry.js",
+        exposes: {
+            './AppModule': './projects/mfe1/src/app/app.module.ts',
+        },
+
+        // For hosts (please adjust)
+        // remotes: {
+        //     "shell": "http://localhost:4000/remoteEntry.js",
+
+        // },
+
+        shared: share({
+          "@angular/core": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+          "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+          "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+          "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+
+          ...sharedMappings.getDescriptors()
+        })
+
+    }),
+    sharedMappings.getPlugin()
+  ],
+};
+
 
 
