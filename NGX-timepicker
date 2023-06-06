@@ -1,5 +1,5 @@
   "ngx-material-timepicker": "^5.5.3",
- 
+ https://agranom.github.io/ngx-material-timepicker/
  <div class="row">
         <span>Choose Time</span>
         <div class="time_schedular" style="margin-bottom: 10px;">
