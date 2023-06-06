@@ -1,0 +1,23 @@
+  "ngx-material-timepicker": "^5.5.3",
+ 
+ <div class="row">
+        <span>Choose Time</span>
+        <div class="time_schedular" style="margin-bottom: 10px;">
+            <div class="row">
+                <div class="col-8">
+                    <div class="row m-0 shared_title">Select Time</div>
+                    <input type="text" [ngxTimepicker]="picker" [disableClick]="true" style="outline: unset; border: unset;" readonly>
+                </div>
+                <div class="col-4 d-flex justify-content-end">
+                    <ngx-material-timepicker-toggle [for]="picker">
+                        <img src="../../../assets/Time_Icon.svg" alt="" ngxMaterialTimepickerToggleIcon>
+                          
+                        </ngx-material-timepicker-toggle>
+                </div>
+                <ngx-material-timepicker  #picker>
+
+                </ngx-material-timepicker>
+            </div>
+        </div>
+
+    </div>
