@@ -1,0 +1,17 @@
+  if(type != this.css){
+      this.clicked = type;
+      $('.'+type).css({
+        "background": "#fff",
+        "width": "30%",
+        "height":"40px",
+        "box-shadow": "0px 1px 4px rgba(202, 202, 202, 0.36);",
+"border-radius": "31px",
+"text-align": "center",
+"color": "#DC8220",
+      });
+      $('.'+this.css).css({
+        "background": "transparent",
+        "color": "black",
+      });
+      this.css = type;
+    }
