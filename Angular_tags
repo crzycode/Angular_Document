@@ -1,0 +1,11 @@
+ng-switch
+ng-content
+ng-container
+Parent to Child Communication
+Child to Parent Communication
+Sibling Communication With Services
+Sibling Communication With EventEmitter
+Communication Using @ViewChild Decorator
+Communication Using Content Projection
+Communication With NGRX Store
+Communication Between Modules
