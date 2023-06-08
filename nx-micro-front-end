@@ -1,0 +1,7 @@
+npx create-nx-workspace@15 Shell
+npm install --save-dev @nrwl/angular@15
+
+npx nx g @nrwl/angular:app shell --port=3000
+
+
+npx nx g @nrwl/angular:setup-mf shell --mfType=host
