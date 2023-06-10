@@ -1,0 +1,11 @@
+public myMethodChangingQueryParams() {
+  const queryParams: Params = { myParam: 'myNewValue' };
+
+  this.router.navigate(
+    [], 
+    {
+      relativeTo: this.activatedRoute,
+      queryParams: queryParams, 
+      queryParamsHandling: 'merge', // remove to replace all query params by provided
+    });
+}
