@@ -15,3 +15,26 @@
       });
       this.css = type;
     }
+
+
+change_arrow(index:any){
+ 
+  this.menu_chek = !this.menu_chek
+  if(this.menu_chek){
+    this.clicked = index
+    $('.'+index).css({"transform":"rotate(180deg)",
+    'margin-top': '10px'
+    })
+  }else{
+    $('.'+this.unclicked).css({"transform":"rotate(0deg)",'margin-top': '0px'})
+  }
+
+if(index != this.unclicked){
+  $('.'+index).css({"transform":"rotate(180deg)",
+  'margin-top': '10px'
+  })
+  $('.'+this.unclicked).css({"transform":"rotate(0deg)",'margin-top': '0px'})
+
+}
+this.unclicked = index
+}
