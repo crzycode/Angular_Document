@@ -1,5 +1,6 @@
 
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+declare const $:any;
 
 @Component({
   selector: 'app-auto-slider',
@@ -15,6 +16,17 @@ export class AutoSliderComponent implements OnInit,OnChanges {
     transform:'translateX(0)',
     'transition':'1s all ease-in-out'
   }
+  count_style:any=0;
+  dots = {
+    "content": '',
+  "height": "8px",
+  "width": "8px",
+  "display": "block",
+  "background-color":"black",
+  "margin": "5px",
+  "border-radius":"5px"
+  }
+  prev_count:any=0;
   is_completed:boolean = true;
   slider_loop:any[]=[];
   slider_count:any = 0
@@ -25,15 +37,24 @@ export class AutoSliderComponent implements OnInit,OnChanges {
   slider(){
 var total_length = this.data.length
 if(this.is_completed){
+
+
   this.slider_count = this.slider_count +100
   if((total_length*100)!= this.slider_count){
-    console.log('complete slider')
 
+    $('.dots'+this.count_style).removeClass('black_dots')
+    $('.dots'+this.count_style).addClass('white_dots')
     setTimeout(() => {
       this.slide.transform='translateX('+-this.slider_count+'%)';
+      $('.dots'+this.prev_count).addClass('black_dots')
+      $('.dots'+this.prev_count).removeClass('white_dots')
       this.slider()
-    }, 3000);
+    }, 5000);
+    this.prev_count = this.count_style
+    this.count_style++
   }else{
+    $('.dots'+this.prev_count).addClass('black_dots')
+    $('.dots'+this.prev_count).removeClass('white_dots')
     this.is_completed = false;
     this.slider();
   }
@@ -42,13 +63,17 @@ if(this.is_completed){
 
   if(this.slider_count != -100){
     this.slide.transform='translateX('+-this.slider_count+'%)';
+    $('.dots'+this.count_style).removeClass('black_dots')
+  $('.dots'+this.count_style).addClass('white_dots')
     setTimeout(() => {
-
+      $('.dots'+this.prev_count).addClass('black_dots')
+      $('.dots'+this.prev_count).removeClass('white_dots')
       this.slider()
-
-    }, 3000);
+    }, 5000);
+    this.prev_count = this.count_style
+    this.count_style--
   }else{
-    debugger
+    $('.dots'+this.prev_count).addClass('white_dots')
     this.is_completed = true;
     this.slider();
   }
@@ -58,16 +83,28 @@ if(this.is_completed){
 
 
   }
+  redirect(index:any){
+    this.slide.transform = 'translateX('+-index*100+'%)'
+  }
 }
 
 
 <div class="slider_container">
-  <div class="slider_wrapper" style="width: 98%;">
+  <div class="slider_wrapper" style="width: 100%;">
     <div *ngFor="let item of data" [ngStyle]="slide" class="slide_content" style="background-image: url(../../../assets/banner.jpg);">
       <span>{{item}}</span>
     </div>
+    <span class="position-absolute indicate indicate_slider_by_dot">
+      <span class="d-flex justify-content-center">
+        <div *ngFor="let item of data; let i = index">
+          <span (click)="redirect(i)" class="black_dots dots{{i}}"></span>
+        </div>
+      </span>
+    </span>
   </div>
 </div>
+
+
 
 .slider_container{
   width: 100%;
@@ -95,5 +132,31 @@ if(this.is_completed){
   overflow: hidden;
   display: -webkit-box;
   position: relative;
+}
+
+.indicate_slider_by_dot{
+  bottom:0px;
+  text-align: center;
+  width: 100%;
+}
+.black_dots::after{
+  content: '';
+  height: 8px;
+  width: 8px;
+  display: block;
+background-color:rgba(0,0,0,0.3);
+  margin: 5px;
+  border-radius:5px;
 
 }
+.white_dots::after{
+  content: '';
+  height: 8px;
+  width: 8px;
+  display: block;
+background-color:white;
+  margin: 5px;
+  border-radius:5px;
+
+}
+
