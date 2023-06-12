@@ -17,24 +17,25 @@
     }
 
 
-change_arrow(index:any){
- 
-  this.menu_chek = !this.menu_chek
-  if(this.menu_chek){
-    this.clicked = index
-    $('.'+index).css({"transform":"rotate(180deg)",
-    'margin-top': '10px'
-    })
-  }else{
-    $('.'+this.unclicked).css({"transform":"rotate(0deg)",'margin-top': '0px'})
+   change_arrow(index: any) { 
+      // get class name as argument in index
+      // create variables menu_chek: boolean = true;
+      // create variables present:any;
+      this.present = index;
+      debugger
+      if(index != this.previous){
+        this.menu_chek = true;
+        $('.' + index).css({transform: 'rotate(180deg)','margin-top': '10px'});
+        $('.' + this.previous).css({transform: 'rotate(0deg)','margin-top': '0px'});
+        this.previous = index;
+      }else{
+        this.menu_chek = !this.menu_chek;
+        if(this.menu_chek){
+          $('.' + index).css({transform: 'rotate(180deg)','margin-top': '10px'});
+        }else{
+          $('.' + index).css({transform: 'rotate(0deg)','margin-top': '0px'});
+        }
+
+      }
+
   }
-
-if(index != this.unclicked){
-  $('.'+index).css({"transform":"rotate(180deg)",
-  'margin-top': '10px'
-  })
-  $('.'+this.unclicked).css({"transform":"rotate(0deg)",'margin-top': '0px'})
-
-}
-this.unclicked = index
-}
