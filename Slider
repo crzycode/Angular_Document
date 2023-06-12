@@ -1,0 +1,99 @@
+
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+
+@Component({
+  selector: 'app-auto-slider',
+  templateUrl: './auto-slider.component.html',
+  styleUrls: ['./auto-slider.component.css']
+})
+export class AutoSliderComponent implements OnInit,OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log()
+  }
+  @Input() data:any;
+  slide = {
+    transform:'translateX(0)',
+    'transition':'1s all ease-in-out'
+  }
+  is_completed:boolean = true;
+  slider_loop:any[]=[];
+  slider_count:any = 0
+  ngOnInit(): void {
+    this.slider();
+  }
+
+  slider(){
+var total_length = this.data.length
+if(this.is_completed){
+  this.slider_count = this.slider_count +100
+  if((total_length*100)!= this.slider_count){
+    console.log('complete slider')
+
+    setTimeout(() => {
+      this.slide.transform='translateX('+-this.slider_count+'%)';
+      this.slider()
+    }, 3000);
+  }else{
+    this.is_completed = false;
+    this.slider();
+  }
+}else{
+  this.slider_count = this.slider_count - 100;
+
+  if(this.slider_count != -100){
+    this.slide.transform='translateX('+-this.slider_count+'%)';
+    setTimeout(() => {
+
+      this.slider()
+
+    }, 3000);
+  }else{
+    debugger
+    this.is_completed = true;
+    this.slider();
+  }
+
+}
+
+
+
+  }
+}
+
+
+<div class="slider_container">
+  <div class="slider_wrapper" style="width: 98%;">
+    <div *ngFor="let item of data" [ngStyle]="slide" class="slide_content" style="background-image: url(../../../assets/banner.jpg);">
+      <span>{{item}}</span>
+    </div>
+  </div>
+</div>
+
+.slider_container{
+  width: 100%;
+  height: 400px;
+
+  overflow: hidden;
+  display: -webkit-box;
+  position: relative;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+
+}
+.slide_content{
+  width: 100%;
+  height: 100%;
+  background:white;
+  padding: 20px;
+
+
+  /* transform: translateX(200px); */
+
+}
+.slider_wrapper{
+  overflow: hidden;
+  display: -webkit-box;
+  position: relative;
+
+}
