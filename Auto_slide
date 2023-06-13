@@ -1,0 +1,144 @@
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Subscription, interval, take, takeUntil } from 'rxjs';
+declare const $:any;
+
+@Component({
+  selector: 'app-brand-auto-slider',
+  templateUrl: './brand-auto-slider.component.html',
+  styleUrls: ['./brand-auto-slider.component.css']
+})
+
+export class BrandAutoSliderComponent implements OnInit,OnChanges {
+  display_width: any;
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log()
+  }
+  @Input() data:any;
+   count:any=0
+   check:boolean = true;
+  slide = {
+    transform:'translateX(0)',
+    'transition':'0.1s all ease-in-out'
+  }
+  count_style:any=0;
+  prev_count:any=0;
+  is_completed:boolean = true;
+  slider_loop:any[]=[];
+  slider_count:any = 0
+  ngOnInit(): void {
+    this.display_width = window.innerWidth
+    this.brand_slider()
+  }
+
+  brand_slider(){
+    if(this.display_width > 1500){
+      var length = this.data.length-8;
+      if(this.check){
+        if(this.count < length*165){
+          this.count = this.count + 1;
+          this.slide.transform = 'translateX('+-this.count+'px)';
+          setTimeout(() => {
+            this.brand_slider();
+          },10);
+        }else{
+         this.check = false
+         this.brand_slider();
+        }
+      }else{
+        if(this.count != 0){
+          this.count = this.count - 1;
+          this.slide.transform = 'translateX('+-this.count+'px)';
+          setTimeout(() => {
+            this.brand_slider();
+          },10);
+        }else{
+          this.check = true
+          this.brand_slider();
+        }
+      }
+    }else{
+      if(this.check){
+          var display = this.display_width - 300
+          var num = (display/155).toFixed(0)
+          var length = this.data.length -Number(num)
+          var total_count = length*155;
+          if(this.count < total_count){
+            this.count = this.count + 1;
+            this.slide.transform = 'translateX('+-this.count+'px)';
+            setTimeout(() => {
+              this.brand_slider();
+            },10);
+          }else{
+            this.check = false
+            this.brand_slider();
+          }
+      }else{
+        if(this.count != 0){
+          this.count = this.count - 1;
+          this.slide.transform = 'translateX('+-this.count+'px)';
+          setTimeout(() => {
+            this.brand_slider();
+          },10);
+        }else{
+          this.check = true
+          this.brand_slider();
+        }
+      }
+    }
+  }
+}
+
+
+------html part
+
+<div class="brand_main_container">
+  <div class="row mx-3">
+    <span style="font-size: 30px;">Brand</span>
+  </div>
+  <div class="slider_container">
+    <div class="slider_wrapper" style="width: 80%;">
+      <div *ngFor="let item of data" [ngStyle]="slide" class="slide_content mx-3">
+        <span>{{item}}</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+---------css part
+.slider_container{
+  width: 100%;
+  height: 180px;
+
+  overflow: hidden;
+  display: -webkit-box;
+  position: relative;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+
+  -webkit-box-shadow: 0px 0px 37px -21px rgba(42, 42, 42, 0.5);
+  -moz-box-shadow: 0px 0px 37px -21px rgba(0,0,0,0.50);
+  box-shadow: 0px 0px 37px -21px rgba(36, 36, 36, 0.5);
+
+}
+.slide_content{
+  width: 80px;
+  height: 80px;
+  background:red;
+  padding: 20px;
+  border-radius:50%;
+
+
+}
+.slider_wrapper{
+  overflow: hidden;
+  display: -webkit-box;
+  position: relative;
+  margin: auto;
+}
+
+
+
+
