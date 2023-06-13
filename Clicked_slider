@@ -1,0 +1,310 @@
+import { Component, OnInit } from '@angular/core';
+import { url } from 'projects/main/src/Url';
+declare const $:any;
+
+@Component({
+  selector: 'app-category-slider',
+  templateUrl: './category-slider.component.html',
+  styleUrls: ['./category-slider.component.css']
+})
+export class CategorySliderComponent implements OnInit{
+  display_width:any;
+url:any = url
+data:any[]=['category','category','category','data','data', 'category','category','category','data','mangal']
+display_count:number= 7*140; //card size and how much card display
+slide_count:any = 0;
+slide = {
+  'transform': 'translateX(0px)',
+  'transition':'0.5s all ease-in-out'
+}
+ngOnInit(): void {
+  this.display_width = window.innerWidth
+}
+back_slider(){
+  if(this.display_width > 1500){
+    if(this.slide_count != -0){
+      var length = this.data.length - 7
+      var divided_length = length*140/2
+      this.slide_count = this.slide_count-divided_length
+      this.slide.transform = 'translateX('+-this.slide_count+'px)';
+    }else{
+      var slide_counter = this.slide_count - 10
+      var minus_slide_counter = this.slide_count + 10
+      this.slide.transform = 'translateX('+-slide_counter+'px)';
+      setTimeout(() => {
+        this.slide.transform = 'translateX('+-minus_slide_counter+'px)';
+      }, 200);
+    }
+  }else{
+    if(this.slide_count != -0){
+      var display = this.display_width - 300
+      var num = (display/150).toFixed(0)
+      var length = this.data.length -Number(num)
+      var divided_length = length*165/2;
+      this.slide_count = this.slide_count-divided_length
+      this.slide.transform = 'translateX('+-this.slide_count+'px)';
+    }else{
+      var plus = this.slide_count - 10
+      var minus = this.slide_count + 10
+      this.slide.transform = 'translateX('+-plus+'px)';
+      setTimeout(() => {
+        this.slide.transform = 'translateX('+-minus+'px)';
+      }, 200);
+    }
+  }
+}
+forward_slider(){
+if(this.display_width > 1500){
+  var length = this.data.length - 7
+  var divided_length = length*140/2
+  if(this.slide_count < length*140){
+    this.slide_count = this.slide_count+divided_length
+    this.slide.transform = 'translateX('+-this.slide_count+'px)';
+  }else{
+    var slide_counter = this.slide_count + 10
+    var minus_slide_counter = this.slide_count - 10
+    this.slide.transform = 'translateX('+-slide_counter+'px)';
+    setTimeout(() => {
+      this.slide.transform = 'translateX('+-minus_slide_counter+'px)';
+    }, 200);
+  }
+}else{
+  var display = this.display_width - 300
+  var num = (display/150).toFixed(0)
+  var length = this.data.length -Number(num)
+  var divided_length = length*165/2;
+  if(this.slide_count < length*165){
+    this.slide_count = this.slide_count+divided_length
+    this.slide.transform = 'translateX('+-this.slide_count+'px)';
+  }else{
+    var slide_counter = this.slide_count + 10
+    var minus_slide_counter = this.slide_count - 10
+    this.slide.transform = 'translateX('+-slide_counter+'px)';
+    setTimeout(() => {
+      this.slide.transform = 'translateX('+-minus_slide_counter+'px)';
+    }, 200);
+  }
+}
+}
+}
+
+
+<div class="category_slider_container">
+  <div class="row justify-content-start w-100 px-3 my-4 position-relative" style="height: 30px;">
+    <span style="font-size: 30px; ">Top Categories</span>
+  </div>
+  <div class="slider_container align-items-center">
+    <span (click)="back_slider()"  class="left_navigation_button d-flex justify-content-center align-items-center">
+      <img style="height: 18px;" src='{{url}}Navigation-left.svg' alt="">
+    </span>
+  <div class="slider_wrapper" style="height: 90%;">
+    <div *ngFor="let item of data" [ngStyle]="slide" class="slide_content">
+      <div class="row m-0 d-flex justify-content-center">
+
+          <img style="width:120px" src="../../../assets/cardiac.jpg" alt="">
+
+
+      </div>
+      <div class="m-0 d-flex justify-content-center">
+        <span>{{item}}</span>
+      </div>
+    </div>
+  </div>
+  <span (click)="forward_slider()"  class="right_navigation_button d-flex justify-content-center align-items-center mx-4">
+    <img style="height: 20px;" src='{{url}}Navigation-right.svg' alt="">
+  </span>
+
+  </div>
+</div>
+
+
+
+
+
+.slider_container{
+  width: 100%;
+  height: 180px;
+  background-color:white;
+  overflow: hidden;
+  display: -webkit-box;
+  position: relative;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+
+  -webkit-box-shadow: 0px 0px 37px -21px rgba(42, 42, 42, 0.5);
+  -moz-box-shadow: 0px 0px 37px -21px rgba(0,0,0,0.50);
+  box-shadow: 0px 0px 37px -21px rgba(36, 36, 36, 0.5);
+}
+
+.slider_wrapper{
+  overflow: hidden;
+  display: -webkit-box;
+  position: relative;
+  background: white;
+  width: 80%;
+}
+.category_slider_container{
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 20px;
+}
+.slide_content{
+  height: 100%;
+  width: 150px;
+  background-color:white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin: 5px;
+}
+.left_navigation_button{
+  background-color:white;
+  height: 40px;
+  width: 40px;
+  min-width: 10px;
+  border-radius:20px;
+  border: 2px solid #D4FFF3;
+
+  transition: 0.3s all ease-in-out;
+}
+.right_navigation_button{
+  background-color:white;
+  height: 40px;
+  width: 40px;
+  border-radius:50%;
+  border: 2px solid #D4FFF3;
+  transition: 0.3s all ease-in-out;
+
+}
+.right_navigation_button:hover{
+  background-color:#D4FFF3;
+  transition: 0.3s all ease-in-out;
+}
+.left_navigation_button:hover{
+  background-color:#D4FFF3;
+  transition: 0.3s all ease-in-out;
+}
+
+.left_navigation_button:active{
+
+    box-shadow: 0px 0px 58px -25px rgba(74,74,74,1);
+    transition: 0.5s all ease-in-out;
+}
+.right_navigation_button:active{
+
+  box-shadow: 0px 0px 58px -25px rgba(74,74,74,1);
+  transition: 0.5s all ease-in-out;
+}
+
+
+.bounce-in-left {
+	-webkit-animation: bounce-in-left 1.1s both;
+	        animation: bounce-in-left 1.1s both;
+}
+
+@-webkit-keyframes bounce-in-left {
+  0% {
+    -webkit-transform: translateX(-600px);
+            transform: translateX(-600px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+    opacity: 0;
+  }
+  38% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+    opacity: 1;
+  }
+  55% {
+    -webkit-transform: translateX(-68px);
+            transform: translateX(-68px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  72% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+  81% {
+    -webkit-transform: translateX(-28px);
+            transform: translateX(-28px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  90% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+  95% {
+    -webkit-transform: translateX(-8px);
+            transform: translateX(-8px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+}
+@keyframes bounce-in-left {
+  0% {
+    -webkit-transform: translateX(-600px);
+            transform: translateX(-600px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+    opacity: 0;
+  }
+  38% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+    opacity: 1;
+  }
+  55% {
+    -webkit-transform: translateX(-68px);
+            transform: translateX(-68px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  72% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+  81% {
+    -webkit-transform: translateX(-28px);
+            transform: translateX(-28px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  90% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+  95% {
+    -webkit-transform: translateX(-8px);
+            transform: translateX(-8px);
+    -webkit-animation-timing-function: ease-in;
+            animation-timing-function: ease-in;
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+  }
+}
