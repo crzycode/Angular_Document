@@ -1,3 +1,6 @@
+ng add @ngrx/store@14
+ng add @ngrx/store-devtools@14
+ng add @ngrx/effects@14 
 
 1st Create State
 
