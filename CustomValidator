@@ -1,0 +1,35 @@
+import { AbstractControl, ValidatorFn } from "@angular/forms";
+
+export function Brand(message:any):ValidatorFn{
+
+    return (control:AbstractControl):{[key:string]:any}|null =>{
+        
+        if(control.value.length != 0){
+            return {'Required':false}
+        }else{
+            return{'Required':message}
+        }
+        
+    }
+}
+
+  this.BrandForm = this.fb.group({
+      Brand_name:['',Brand("This feild is Required")],
+      Brand_id:[''],
+      Image:[''],
+      File_type:[''],
+      Description:['']
+    })
+  get brandname():any{
+    return this.BrandForm.get('Brand_name')
+  }
+
+ if(this.brandname.errors.Required != false){
+
+  }else{
+
+  } 
+//or
+ <div *ngIf="brandname.invalid && (brandname.dirty || brandname.touched)">
+                    <div *ngIf="brandname.errors.Required">ghjkl</div>
+                </div>
