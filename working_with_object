@@ -19,3 +19,12 @@ interface Person {
 const obj: Person = { name: ‘Bobby Hadz’ };
 delete obj[‘name’];
 console.log(obj); // :point_right:️ {}
+
+// check if this value is object 
+ isObject(value:any) {
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      !Array.isArray(value)
+    );
+  }
