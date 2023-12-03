@@ -1,0 +1,8 @@
+first login npm js with cmd 
+npm login
+
+create library
+build library 
+got to project and it package.json file 
+make this thing "private": true,
+npm publish --access public
