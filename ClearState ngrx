@@ -1,0 +1,40 @@
+// 1st 
+
+export function clearState(reducer:any) {
+    return function (state:any, action:any) {
+  
+      if (action.type === ActionTypes.LOGOUT) {
+        state = undefined;
+      }
+  
+      return reducer(state, action);
+    };
+  }
+  export class ActionTypes {    
+    static LOGOUT = "[App] logout";
+  }
+  export class Logout implements Action {
+    readonly type = ActionTypes.LOGOUT;
+  }
+export const metaReducers: MetaReducer<any>[] = [clearState];
+ StoreModule.forRoot({"SearchState":Search_reducer},{metaReducers}),
+this.store.dispatch(new Logout())
+
+//2nd
+create action 
+export const LOGOUT = '[App] Logout';
+export const logoutAction = createAction('[App] Logout');
+
+  export function clearStateMetaReducer<State extends {}>(reducer: 
+    ActionReducer<State>): ActionReducer<State> {
+    return function clearStateFn(state, action) {
+        if (action.type === LOGOUT) {
+            state = {} as State; // ==> Emptying state here
+    }
+    return reducer(state, action);
+   };
+}
+export const metaReducers: MetaReducer<any>[] = [clearStateMetaReducer];
+ StoreModule.forRoot({"SearchState":Search_reducer},{metaReducers}),
+ this.store.dispatch(logoutAction())
+
