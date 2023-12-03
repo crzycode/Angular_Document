@@ -1,0 +1,5 @@
+//build library
+gotto dist/librarynam
+//cmd
+npm pack
+npm install ./dist/libraryname/tarfilename.tgz
