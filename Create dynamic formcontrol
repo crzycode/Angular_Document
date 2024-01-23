@@ -1,0 +1,43 @@
+//ts file
+
+export class AppComponent implements OnInit {
+  title = 'DynamicFormcontrol';
+  registerForm!: FormGroup;
+
+  fields: any[] = [];
+  model = {
+    name: '',
+    lastName: '',
+    address: '',
+    age: '',
+  };
+
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  getFormControlsFields() {
+    const formGroupFields: any = {};
+    for (const field of Object.keys(this.model)) {
+      formGroupFields[field] = new FormControl('');
+      this.fields.push(field);
+    }
+    return formGroupFields;
+  }
+  buildForm() {
+    const formGroupFields = this.getFormControlsFields();
+    this.registerForm = new FormGroup(formGroupFields);
+  }
+  Submitdata(){
+    console.log(this.registerForm.value)
+  }
+}
+
+//html file
+<form [formGroup]="registerForm">
+  <div *ngFor="let field of fields">
+         <label>{{field}}</label>
+  <input type="text" [formControlName]="field"/>
+  </div>
+</form>
+<button (click)="Submitdata()">Click</button>
