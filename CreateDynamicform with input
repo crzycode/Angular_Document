@@ -1,0 +1,69 @@
+
+// ts file
+export class SepreteComponent {
+  dynamicFormGroup!: FormGroup;
+  @Input() model:any={};
+  fields:any[]=[];
+  ngOnInit() {
+   this.buildform()
+  }
+buildform(){
+  const formgroupfields = this.getformcontrolerfield();
+  this.dynamicFormGroup = new FormGroup(formgroupfields)
+}
+getformcontrolerfield(){
+  const formGroupFields:any = {};
+    for (const field of Object.keys(this.model)) {
+      const fieldProps = this.model[field];
+      formGroupFields[field] = new FormControl(fieldProps.value);
+      this.fields.push({ ...fieldProps, fieldName: field });
+    }
+    return formGroupFields;
+}
+
+submit(){
+  console.log(this.dynamicFormGroup.value)
+}
+}
+//html file
+<form [formGroup]="dynamicFormGroup">
+    <div *ngFor="let field of fields">
+        <label>{{field.label}}</label>
+        <input [type]="field.type" [formControlName]="field.fieldName"/>
+    </div>
+</form>
+<button (click)="submit()">click</button>
+
+// call it anywhere
+
+  model = {
+    firstname: {
+      type: "text",
+      value: "mangal",
+      label: "FirstName",
+    },
+    lastname: {
+      type: "text",
+      value: "",
+      label: "LastName",
+    },
+    address: {
+      type: "text",
+      value: "",
+      label: "Address",
+    },
+    age: {
+      type: "number",
+      value: "",
+      label: "age",
+    },
+    birthDay: {
+      type: "date",
+      value: "",
+      label: "Birthday",
+    },
+  };
+
+
+
+<app-seprete [model]="model"></app-seprete>
