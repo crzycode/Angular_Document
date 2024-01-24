@@ -1,0 +1,25 @@
+export class ObservablesComponent {
+  model:any[] = [{
+    type: "text",
+    value: "",
+    label: "LastName",
+  },{
+    type: "text",
+    value: "",
+    label: "LastName",
+  },{
+    type: "text",
+    value: "",
+    label: "LastName",
+  }];
+  Totalstudent:any = new Observable((res) =>{
+        res.next(this.model)
+  })
+  add(){
+    this.Totalstudent.subscribe((res:any) =>{
+      console.log(res)
+    })
+  }
+}
+
+<button (click)="add()">click</button>
