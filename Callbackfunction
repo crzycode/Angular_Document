@@ -1,0 +1,21 @@
+export class CallbackfunComponent implements OnInit {
+ngOnInit(): void {
+  
+}
+public onSubmit(): void {
+  this.callback(this.calc);
+}
+
+public callback(cb:any): void {
+  const x = 5;
+  const y = 7;
+  cb(x, y);
+}
+
+public calc(x: number, y: number): void {
+  console.log(x + y);
+}
+}
+
+//html
+<button (click)="onSubmit()">onSubmit</button>
