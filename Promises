@@ -1,0 +1,32 @@
+export class PromiseasyncComponent {
+  model:any[] = [{
+    type: "text",
+    value: "",
+    label: "LastName",
+  },{
+    type: "text",
+    value: "",
+    label: "LastName",
+  },{
+    type: "text",
+    value: "",
+    label: "LastName",
+  }];
+  Totalstudent:any = new Promise((res,rej) =>{
+    setTimeout(() =>{
+        res(
+        this.model
+        )
+    },2000)
+  })
+  add(){
+    this.model.push({
+      type: "text",
+      value: "",
+      label: "LastName",
+    })
+  }
+}
+//html
+<p *ngFor="let item of Totalstudent|async" >{{item.type}}</p>
+<button (click)="add()">click</button>
