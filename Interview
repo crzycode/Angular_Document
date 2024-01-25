@@ -1,0 +1,39 @@
+export class OddEvenComponent implements OnInit {
+ a:any = "marry"
+ b:any = "army"
+ c:number =5
+ d:number =10;
+  evens: string[] = [];
+odds: string[] = [];
+  ngOnInit(): void {
+    this.checkanabolic(this.a,this.b)
+    this.swapNumber()
+  }
+updateGameState(){
+
+  for(let i = 0; i< 100; i++){
+    if ( i % 2 === 0) {
+      this.evens.push(`even-${i}`);
+    } else {
+      this.odds.push(`odd-${i}`);
+    }
+  }
+console.log(this.evens)
+console.log(this.odds)
+}
+checkanagram(a:any, b:any){
+  var data:any = a.split('').sort().join().toString()
+  var data1:any = b.split('').sort().join().toString()
+  if(data == data1){
+    console.log(true)
+  }else{
+    console.log(false)
+  }
+}
+swapNumber(){
+  this.c = this.c+this.d
+  this.d = this.c-this.d
+  this.c = this.c - this.d
+  console.log(this.c,this.d)
+}
+}
