@@ -6,11 +6,11 @@ export class OddEvenComponent implements OnInit {
   evens: string[] = [];
 odds: string[] = [];
   ngOnInit(): void {
-    this.checkanabolic(this.a,this.b)
+    this.checkanagram(this.a,this.b)
     this.swapNumber()
   }
-updateGameState(){
-
+//even and odd
+Evenodd(){
   for(let i = 0; i< 100; i++){
     if ( i % 2 === 0) {
       this.evens.push(`even-${i}`);
@@ -21,6 +21,7 @@ updateGameState(){
 console.log(this.evens)
 console.log(this.odds)
 }
+// check two anagram to each other
 checkanagram(a:any, b:any){
   var data:any = a.split('').sort().join().toString()
   var data1:any = b.split('').sort().join().toString()
@@ -30,6 +31,7 @@ checkanagram(a:any, b:any){
     console.log(false)
   }
 }
+//swap number without third variable
 swapNumber(){
   this.c = this.c+this.d
   this.d = this.c-this.d
