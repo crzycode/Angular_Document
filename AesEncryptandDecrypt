@@ -1,4 +1,7 @@
-   this.store.select('Medicinetype').subscribe(res =>{
+npm i crypto-ts
+import * as CryptoTS from 'crypto-ts';
+
+this.store.select('Medicinetype').subscribe(res =>{
     var obj = {
       name:'mangal'
       
