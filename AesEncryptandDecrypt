@@ -10,8 +10,8 @@ this.store.select('Medicinetype').subscribe(res =>{
    })
 
   encryptUsingAES256(DATA:any) {
-    let _key = CryptoTS.enc.Utf8.parse('b14ca5898a4e4133bbce2ea2315a1916');
-    let _iv = CryptoTS.enc.Utf8.parse('1234567890123456');
+    let _key = CryptoTS.enc.Utf8.parse(Key);
+    let _iv = CryptoTS.enc.Utf8.parse('1234567890123456'); // 16 charector only
     let encrypted = CryptoTS.AES.encrypt(JSON.stringify(DATA), _key, {
       iv: _iv,
       mode: CryptoTS.mode.ECB,
@@ -21,8 +21,8 @@ this.store.select('Medicinetype').subscribe(res =>{
   }
 
   decryptUsingAES256() {
-    let _key = CryptoTS.enc.Utf8.parse('b14ca5898a4e4133bbce2ea2315a1916');
-    let _iv = CryptoTS.enc.Utf8.parse('1234567890123456');
+    let _key = CryptoTS.enc.Utf8.parse(Key);
+    let _iv = CryptoTS.enc.Utf8.parse('1234567890123456'); // 16 charector only
     var ob = {
       iv: _iv,
       mode: CryptoTS.mode.CBC,
