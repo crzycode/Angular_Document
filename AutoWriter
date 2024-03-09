@@ -1,0 +1,44 @@
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  <body>
+    <h1>Hello there!</h1>
+    <div id="text-container">
+       <p class="text"></p>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+const textContainer = document.getElementById('text-container');
+const text1 = document.getElementById('text-container');
+const text = `var context = new MLContext();
+var emptyData = new List<TextData>();
+var data = context.Data.LoadFromEnumerable(emptyData);
+var read = System.IO.File.ReadAllText("D:\\Projects\\BitBot\\Backend\\RoughBitBot\\RoughBitBot\\StopWords.json");
+var verbs = JsonConvert.DeserializeObject<List<string>>(read);
+var customTokenization = context.Transforms.Text.TokenizeIntoWords("Tokens", "Text", separators: new[] { ' ', '.', ',' }).Append(context.Transforms.Text.RemoveStopWords("Tokens", "Tokens", verbs.ToArray()));
+var customStopWordsModel = customTokenization.Fit(data);
+var customEngine = context.Model.CreatePredictionEngine<TextData, TextToken>(customStopWordsModel);
+TextToken newCustomText = customEngine.Predict(new TextData { Text = id.ToLower() });
+Array.Sort(newCustomText.Tokens);
+return string.Join(" ", newCustomText.Tokens);`;
+
+window.addEventListener('load', (event) => {
+  console.log('DOM fully loaded and parsed');
+  addText(text);
+});
+console.log(text1);
+function addText(text) {
+  const chars = text.split('');
+  for (let i = 0; i < chars.length; i++) {
+    setTimeout(() => {
+      text1.innerText = chars.slice(0, i).join('');
+      console.log(text1.innerText);
+    }, i * 100);
+  }
+}
