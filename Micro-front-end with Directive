@@ -1,0 +1,197 @@
+1st step
+ng new onbazar
+
+2nd step
+ng add @angular-architects/module-federation --project app --port 4000
+
+3rd step
+
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const mf = require("@angular-architects/module-federation/webpack");
+const path = require("path");
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+  path.join(__dirname, 'tsconfig.json'),
+  [/* mapped paths to share */]);
+
+module.exports = {
+  output: {
+    uniqueName: "shellApp",
+    publicPath: "auto",
+    scriptType:"text/javascript"
+  },
+  optimization: {
+    runtimeChunk: false
+  },   
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases(),
+    }
+  },
+  experiments: {
+    outputModule: true
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+
+        // For remotes (please adjust)
+        name: "shellApp",
+        // filename: "remoteEntry.js",
+        // exposes: {
+        //     './Component': './/src/app/app.component.ts',
+        // },        
+        
+        // For hosts (please adjust)
+        remotes: {
+            "mfe1": "mfe1@http://localhost:4001/remoteEntry.js",
+
+        },
+
+        shared: share({
+          "@angular/core": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+
+          ...sharedMappings.getDescriptors()
+        })
+        
+    }),
+    sharedMappings.getPlugin()
+  ],
+};
+
+
+4th step
+shell app
+
+create directive
+
+import { loadRemoteModule } from "@angular-architects/module-federation";
+import { Directive, ViewContainerRef } from "@angular/core";
+
+@Directive({ selector: '[adHost]' })
+export class AdHostDirective {
+  constructor(private viewContainerRef: ViewContainerRef) {}
+
+  ngOnInit(): void {
+    loadRemoteModule({
+      remoteEntry: 'http://localhost:4001/remoteEntry.js',
+      remoteName: 'mfe1',
+      exposedModule: './AppComponent', // <<<< Use the component expose
+    }).then((m) => {
+      const componentType = m.AppComponent; // <<<< The component's type here.
+    
+      // Create the component in this view-container:
+      const component:any = this.viewContainerRef.createComponent(componentType)
+      component.instance.Data = "Hello this is"
+      component.instance.Closed.subscribe((res:any) => {
+        console.log(res)
+        }) 
+
+    });
+  }
+}
+5th step
+@NgModule({
+  declarations: [
+    AppComponent,
+    AdHostDirective
+  ],
+  imports: [
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    AppRoutingModule
+  ],
+  providers: [AppService],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+6th step 
+
+<div adHost></div>
+
+// Remote App
+
+1st step
+
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const mf = require("@angular-architects/module-federation/webpack");
+const path = require("path");
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+  path.join(__dirname, 'tsconfig.json'),
+  [/* mapped paths to share */]);
+
+module.exports = {
+  output: {
+    uniqueName: "mfe1",
+    publicPath: "auto",
+    scriptType:"text/javascript"
+
+  },
+  optimization: {
+    runtimeChunk: false
+  },   
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases(),
+    }
+  },
+  experiments: {
+    outputModule: true
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+        // For remotes (please adjust)
+        name: "mfe1",
+        filename: "remoteEntry.js",
+        exposes: {
+            './AppComponent': './/src/app/app.component.ts',
+        },        
+        
+        // For hosts (please adjust)
+        // remotes: {
+        //     "mfe1": "http://localhost:3000/remoteEntry.js",
+
+        // },
+
+        shared: share({
+          "@angular/core": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+
+          ...sharedMappings.getDescriptors()
+        })
+        
+    }),
+    sharedMappings.getPlugin()
+  ],
+};
+
+2nd step
+
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+  title = 'mfe1';
+  @Input() Data:any = "unknown"
+  @Output() Closed = new EventEmitter()
+
+  Submit() {
+   this.Closed.emit("Hello Herro")
+    } 
+}
+
