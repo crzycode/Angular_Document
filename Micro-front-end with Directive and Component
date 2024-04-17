@@ -94,6 +94,27 @@ export class AdHostDirective {
     });
   }
 }
+
+//or
+in component
+export class RemoteComponentComponent {
+constructor(private viewContainerRef:ViewContainerRef) {
+  loadRemoteModule({
+    remoteEntry: 'http://localhost:4001/remoteEntry.js',
+    remoteName: 'mfe1',
+    exposedModule: './AppComponent',
+  }).then((m) => {
+    const componentType = m.AppComponent;
+    const component:any = this.viewContainerRef.createComponent(componentType)
+    component.instance.Data = "Hello"
+    component.instance.Closed.subscribe((res:any) => {
+      console.log(res)
+      }) 
+
+  });
+}
+}
+
 5th step
 @NgModule({
   declarations: [
