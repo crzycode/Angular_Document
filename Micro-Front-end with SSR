@@ -1,0 +1,173 @@
+ng new onbazar //create project
+1s step
+ng add @nguniversal/express-engine
+
+2nd step
+ng add @angular-architects/module-federation --project app --port 4000 -- do this with every project
+
+3rd step 
+
+open your Shell App
+
+edit webpack.config.js file
+
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const mf = require("@angular-architects/module-federation/webpack");
+const path = require("path");
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+  path.join(__dirname, 'tsconfig.json'),
+  [/* mapped paths to share */]);
+
+module.exports = {
+  output: {
+    uniqueName: "shellApp",
+    publicPath: "auto",
+    scriptType:"text/javascript"
+  },
+  optimization: {
+    runtimeChunk: false
+  },   
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases(),
+    }
+  },
+  experiments: {
+    outputModule: true
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+
+        // For remotes (please adjust)
+        name: "shellApp",
+        // filename: "remoteEntry.js",
+        // exposes: {
+        //     './Component': './/src/app/app.component.ts',
+        // },        
+        
+        // For hosts (please adjust)
+        remotes: {
+            "mfe1": "mfe1@http://localhost:4200/remoteEntry.js",
+
+        },
+
+        shared: share({
+          "@angular/core": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+
+          ...sharedMappings.getDescriptors()
+        })
+        
+    }),
+    sharedMappings.getPlugin()
+  ],
+};
+
+4th step
+Remote App
+
+edit webpack.config.js file
+
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const mf = require("@angular-architects/module-federation/webpack");
+const path = require("path");
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+  path.join(__dirname, 'tsconfig.json'),
+  [/* mapped paths to share */]);
+
+module.exports = {
+  output: {
+    uniqueName: "mfe1",
+    publicPath: "auto",
+    scriptType:"text/javascript"
+
+  },
+  optimization: {
+    runtimeChunk: false
+  },   
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases(),
+    }
+  },
+  experiments: {
+    outputModule: true
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+        // For remotes (please adjust)
+        name: "mfe1",
+        filename: "remoteEntry.js",
+        exposes: {
+            './AppModule': './/src/app/app.module.ts',
+        },        
+        
+        // For hosts (please adjust)
+        // remotes: {
+        //     "mfe1": "http://localhost:3000/remoteEntry.js",
+
+        // },
+
+        shared: share({
+          "@angular/core": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+          "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+
+          ...sharedMappings.getDescriptors()
+        })
+        
+    }),
+    sharedMappings.getPlugin()
+  ],
+};
+
+5th step
+
+shell app
+
+add remote routing
+
+const routes: Routes = [
+  {path: '',
+loadChildren: () => {
+return loadRemoteModule({
+remoteEntry:"http://localhost:4200/remoteEntry.js",
+remoteName:"mfe1",
+exposedModule:"./AppModule"
+}).then(m => m.AppModule).catch(err => console.error(err));
+}
+}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, {
+    initialNavigation: 'enabledBlocking'
+})],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+//6th 
+open remote apps
+
+and add routing
+
+
+const routes: Routes = [
+  {path:'',component:AppComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
