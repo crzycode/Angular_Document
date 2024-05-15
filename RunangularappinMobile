@@ -1,0 +1,12 @@
+ng serve --host 192.168.0.4
+
+after that 
+
+As an addition to all the answers above, you might need to adjust your proxy settings on your device. For my Android Phone, this was:
+
+Settings
+Wifi
+Long Click your desired Network
+Modify Network
+Click advanced/extended Options
+Set proxyHostname: localhost and proxyPort: 4200 and bypassProxyFor: hostIpAddress
