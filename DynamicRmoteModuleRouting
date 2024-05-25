@@ -1,0 +1,32 @@
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DynamicRouteService {
+  constructor(private router: Router) {}
+
+  addRoute(path: string, loadChildren: () => Promise<any>): void {
+    this.router.config.push({ path, loadChildren });
+    this.router.resetConfig(this.router.config);
+  }
+}
+
+
+//after that 
+
+  Routepage(arg: any) {
+    this.DynamicRoute.addRoute(arg.toLowerCase(), () =>{
+      return loadRemoteModule({
+        remoteEntry:`http://localhost:8080/App/${arg}/Frontend/${arg.toLowerCase()}.js`,
+        remoteName:`${arg.toLowerCase()}`,
+        exposedModule:"./AppModule"
+      }).then(r => r.AppModule).catch(e => console.log(e))
+    });
+    this.router.navigate([`/${arg.toLowerCase()}`])
+  }
+
+  <div class="col-3">
+    <li *ngFor="let item of Data" (click)="Routepage(item.App_id)">{{item.App_name}}</li>
+  </div>
