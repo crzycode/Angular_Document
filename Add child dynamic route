@@ -1,0 +1,32 @@
+@Injectable({
+  providedIn: 'root'
+})
+export class ConfigService {
+  private baseUrl = 'http://localhost:2027/api'; 
+  constructor(private http:HttpClient,private router:Router) { }
+  addRoute(path: string, loadChildren: () => Promise<any>): void {
+    const currentConfig:any = this.router.config;
+    for(let i =0; i < currentConfig.length; i++){
+      if(currentConfig[i].path == "config"){
+        currentConfig[i]['_loadedRoutes'][0].children.push({path,loadChildren})
+        console.log(currentConfig)
+      }
+    }
+    this.router.resetConfig(currentConfig)
+    this.router.navigate([`/config/${path.toLowerCase()}`])
+  }
+
+}
+
+
+//
+
+  Routepage(arg: any) {
+    this.config.addRoute(arg.toLowerCase(),() =>{
+      return loadRemoteModule({
+        remoteEntry:`http://localhost:8080/App/${arg}/Frontend/${arg.toLowerCase()}.js`,
+        remoteName:`${arg.toLowerCase()}`,
+        exposedModule:"./AppModule"
+      }).then(r => r.AppModule).catch(e => console.log(e))
+    })
+  }
