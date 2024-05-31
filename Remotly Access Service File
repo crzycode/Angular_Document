@@ -1,0 +1,16 @@
+  async loadRemote() {
+    try {
+      const module = await loadRemoteModule({
+        remoteEntry: "http://localhost:4001/remoteEntry.js",
+        remoteName: 'child1',
+        exposedModule: "./AppService"
+      });
+      console.log(module)
+      var instance = this.injector.get(module.AppService)
+      instance.getData().subscribe((res:any) =>{
+        console.log(res)
+      })
+    } catch (error) {
+      console.error('Error loading remote module:', error);
+    }
+  }
