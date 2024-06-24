@@ -1,0 +1,2 @@
+ const scripts = document.querySelectorAll(`script[src="http://localhost:4202/remoteEntry.js"]`);
+    scripts.forEach(script => script.remove());
