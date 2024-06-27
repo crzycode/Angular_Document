@@ -1,0 +1,37 @@
+onComponents(event: any) {
+    this.dynamicLoader.loadThemesConfig().subscribe((data) => {
+      console.log(data);
+      this.themes = data.filter((x: any) => {
+        if (x.remoteName == event.target.value) {
+          console.log(this.currentComponent);
+          if (this.currentComponent != null) {
+            this.currentComponent.get((this.index - 1).toString())?.destroy();
+            const scripts = document.querySelectorAll(
+              `script[src="${this.scripts}"]`
+            );
+            scripts.forEach((script) => script.remove());
+          }
+
+          loadRemoteModule({
+            remoteEntry: x.remoteEntry,
+            remoteName: x.remoteName,
+            exposedModule: x.exposedModule,
+          })
+            .then((m) => {
+              const componentType = m[x.componentName];
+              const component: any =
+                this.container.createComponent(componentType);
+              this.currentComponent.set(this.index.toString(), component);
+              this.scripts=x.remoteEntry
+              this.index++;
+
+             
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+          // return x;
+        }
+      });
+    });
+  }
