@@ -1,0 +1,29 @@
+//dispatch component
+this.store.dispatch(event_edit_action({value:Comp1Component}))
+
+// and use other componet or module
+export class AppComponent implements AfterViewInit {
+  @ViewChild('container',{read:ViewContainerRef,static:true}) container!:ViewContainerRef
+
+  title = 'child1';
+  receivedData!: string;
+  constructor(private store: Store<{ event_edit: event_data }>,
+    private injector: Injector,
+    private resolver: ComponentFactoryResolver,
+    private appRef: ApplicationRef
+  ) {
+ 
+  
+  }
+  ngAfterViewInit(): void {
+    this.store.select('event_edit').subscribe(res =>{
+    var fac = this.resolver.resolveComponentFactory(res.event)
+    const componentRef = fac.create(this.injector);
+    this.container.createComponent(componentRef.componentType)
+     })
+  }
+}
+
+//html part
+
+<ng-container #container></ng-container>
