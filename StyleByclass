@@ -1,0 +1,2 @@
+  var e = this.el.nativeElement
+  var classs:any = e.querySelectorAll(`.items${items}`)
