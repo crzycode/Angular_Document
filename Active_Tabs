@@ -1,0 +1,13 @@
+//html
+<span *ngFor="let item of Tabs; index as i" class="items{{i}}" (click)="Click_to_slide(i,item)" [class.active]="activeTab === item" style="margin: 0px 15px; cursor: pointer;">{{item}}</span>
+
+//ts
+  activeTab: string = 'tab1';
+ Click_to_slide(items:any,tab:any){
+ this.activeTab = tab;   
+ }
+
+//css
+  .active{
+    color: blue;
+  }
