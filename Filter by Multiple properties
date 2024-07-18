@@ -1,0 +1,30 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'multifilter'
+})
+export class FilterPipe implements PipeTransform {
+
+  transform(items: any[], searchText: string, properties: string[]): any[] {
+    if (!items) return [];
+    if (!searchText) return items;
+    searchText = searchText.toLowerCase();
+    return items.filter(item => {
+      return properties.some(property => {
+        return item[property].toString().toLowerCase().includes(searchText);
+      });
+    });
+  }
+}
+
+
+//html
+
+<div>
+  <input type="text" [(ngModel)]="searchText" placeholder="Search...">
+  <ul>
+    <li *ngFor="let item of items | filter:searchText:['name', 'description']">
+      {{ item.name }} - {{ item.description }}
+    </li>
+  </ul>
+</div>
