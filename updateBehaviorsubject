@@ -1,0 +1,24 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TagsDataService {
+   Tags = new BehaviorSubject<any[]>([]);
+
+  constructor() { }
+  appendintotags(newData: any){  
+        var currentdata = this.Tags.getValue()
+        const updatedData = [...currentdata, newData]; 
+        this.Tags.next(updatedData); 
+  }
+  Updateintotags(id:any,data:any){
+    console.log(id)
+    var currentdata = this.Tags.getValue()
+    var finddata = currentdata.findIndex(item => item.tag_id === id);
+    currentdata[finddata].tag_description = data.description
+    currentdata[finddata].tag_name = data.name
+    this.Tags.next(currentdata)
+  }
+}
