@@ -1,0 +1,100 @@
+
+import { HtmlParser } from '@angular/compiler';
+import {
+  ApplicationRef,
+  ComponentFactoryResolver,
+  ComponentRef,
+  EmbeddedViewRef,
+  EventEmitter,
+  Injectable,
+  Injector,
+  Type,
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PopUpService {
+
+  Ref!:ComponentRef<any>
+  html = `<div  style="height: 100%; width: 100%; position: absolute; background-color: rgba(0,0,0,0.5); top: 0; left: 0; z-index: 1000;" class="d-flex align-items-center justify-content-center main_popup_container">
+    <div style="background-color: white; border-radius: 10px; " class="px-3 py-1 pop_up">
+        <div class="m-0 d-flex justify-content-between">
+            <div style="font-size: 30px; font-weight: 700; color: var(--bg); " class="popup_title">Preview</div>
+            <div  class="d-flex align-items-center justify-content-center popup_close"
+                style="height: 30px; width: 30px; padding: 8px; margin-top: 0px;margin-right: -10px; border-radius: 20px; background-color: #f2f2f2;">
+                </div>
+        </div>
+        <div style="overflow: hidden; height: calc(100% - 60px);">
+            <div id="style-1" class="popup_container h-100 w-100" style="overflow: auto;">
+             
+
+
+            </div>
+        </div>
+
+    </div>
+</div>`
+Components = new Map<string, ComponentRef<any>>();
+  constructor(
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private appRef: ApplicationRef,
+    private injector: Injector,
+  ) {}
+
+  createComponent<T>(component: Type<T>, Property:IPopup = {Height:"90%",Width:"90%",Transition:0.5,CloseIcon:'../../../../../assets/Cross.svg',IconSize:'15px'},TitleText:any = "Popup"): Promise<ComponentRef<T>> {
+    return new Promise((resolve, reject) => {
+      this.Ref = this.componentFactoryResolver.resolveComponentFactory(component).create(this.injector);
+      this.Ref.instance['close'] = new EventEmitter<any>();
+      this.appRef.attachView(this.Ref.hostView);
+      const domElem = (this.Ref.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(this.html, 'text/html');
+      const htmlNode:any = doc.body.firstChild;
+      var Popuo_container = htmlNode.querySelector('.popup_container')
+      var pop_up = htmlNode.querySelector('.pop_up')
+      var Close = htmlNode.querySelector('.popup_close')
+      var Title = htmlNode.querySelector('.popup_title')
+      Title.innerHTML = TitleText
+      Close.style.backgroundImage = `url(${Property.CloseIcon})`
+      Close.style.backgroundSize = Property.IconSize
+      Close.style.backgroundRepeat = 'no-repeat'
+      Close.style.backgroundPosition = 'center'
+      htmlNode.style.transition = `${Property.Transition}s all ease-in-out`
+      htmlNode.style.opacity = '0'
+      pop_up.style.height = Property.Height
+      pop_up.style.width = Property.Width
+      pop_up.style.transition = `${Property.Transition}s all ease-in-out`
+      pop_up.style.transform = 'translatey(-500%)'
+      Close.addEventListener('click',  (event:any) => this.ClosePopup(this.Ref,pop_up,htmlNode,Property.Transition));
+      setTimeout(() => {
+        Popuo_container.appendChild(domElem)
+         pop_up.style.transform = 'translatey(0%)'
+         htmlNode.style.opacity = '1'
+         this.Ref.instance['close'].emit(true)
+      }, 10);
+      document.body.appendChild(htmlNode);
+      resolve(this.Ref.instance);
+    });
+  }
+
+  ClosePopup(event:any,popup:any,main:any,transition:any){
+    event.instance['close'].emit(false)
+    popup.style.transform = 'translatey(-500%)'
+    main.style.opacity = '0'
+    setTimeout(() => {
+      document.body.removeChild(main)
+      this.appRef.detachView(this.Ref.hostView);
+      this.Ref.destroy();
+    }, transition*1000);
+  }
+}
+export interface IPopup{
+  Height?:any;
+  Width?:any;
+  Transition?:number
+  CloseIcon:any;
+  IconSize?:any
+
+}
