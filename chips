@@ -1,0 +1,239 @@
+-- html
+
+  <div [ngStyle]="InputStyle" style="position: relative;">
+    <div *ngIf="Data.length > 0" style="display: flex; flex-wrap: wrap; padding: 2px;" >
+        <span *ngFor="let item of Data; index as i" [ngStyle]="ChipsStyle" (click)="Edit(i)" style="display: flex !important; align-items: center !important;">
+        <span>{{item}}</span>
+        <span style="margin-left: 10px; display: flex; align-items: center;">
+            <img [src]="Icon" [ngStyle]="{height:IconSize,width:IconSize}" alt="" (click)="RemoveChips(i)">
+        </span>
+        </span>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <input type="text" [formControl]="Value"
+        (input)="onInput()"
+        [placeholder]="filteredSuggestion || 'Search...'" 
+        (keyup)="AddChips($event)" class="input_style">
+        <img [src]="SubmitIcon" [ngStyle]="{height:SubmitIconSize,width:SubmitIconSize}" (click)="Submitchips()" alt="">
+    </div>
+    <div *ngIf="showSuggestions" style="position: absolute; left: 0; top: calc(100% + 10px); width: 100%;">
+        <ul [ngStyle]="Liststyle">
+          <li *ngFor="let suggestion of filteredSuggestions" (click)="selectSuggestion(suggestion)">
+            {{ suggestion }}
+          </li>
+        </ul>
+      </div>
+ </div>
+
+    -- ts
+    import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
+
+@Component({
+  selector: 'Bitchips-Array',
+  templateUrl: './chips.component.html',
+  styleUrls: ['./chips.component.css']
+})
+
+
+export class ChipsComponent {
+
+
+  @Input() InputStyle:any ={
+    'border-radius':'5px',
+    border:'1px solid black',
+    padding:'10px',
+  }
+  @Output() Output = new EventEmitter<any>();
+  @Output() Error = new EventEmitter<any>();
+  @Input() ChipsStyle:any = {
+    background:'white',
+    padding:'5px',
+    border:'1px solid black',
+    'border-radius':'5px',
+    'margin-left':'5px',
+  }
+  @Input() Liststyle:any = {
+    'border-radius':'5px'
+  }
+ @Input() Icon:any="http://localhost/icons/Cross-red.png"
+ @Input() SubmitIcon:any = "http://localhost/icons/Cross-red.png"
+ @Input() SubmitIconSize:any = '15px'
+ @Input() IconSize:any = "15px"
+@Input() Data:any[]=[]
+@Input() Duplicate:boolean = false
+@Input() ErrorMessage:any = "Duplicates Are not allowed"
+searchControl = new FormControl('');
+suggestions: string[] = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape'];
+filteredSuggestions: string[] = [];
+filteredSuggestion: string = '';
+showSuggestions = false;
+IsEdit:boolean = false
+Index:any = 0;
+Value = new FormControl('')
+ AddChips(event:any) {
+  var s:any = this.Value.value
+  if(s.length > 0){
+    if (event.keyCode == 13) {
+      if(this.IsEdit){
+        var match = this.Data.filter(x => x == this.Value.value)
+        if(match.length > 0){
+          var obj = {
+            Duplicate:this.Value.value,
+            Message:this.ErrorMessage
+          }
+          this.Error.emit(obj)
+        }else{
+          this.Data[this.Index] = this.Value.value
+        }
+        this.Index = 0;
+        this.IsEdit = false
+      }else{
+        var str:any = this.Value.value
+        var arr = str.split(',');
+        arr = arr.filter(function (e: any) {
+          return e;
+        });
+        for(let i =0; i < arr.length; i++){
+          if(this.Duplicate){
+            this.Data.push(arr[i])
+          }else{
+            var match = this.Data.filter(x => x == arr[i])
+            if(match.length >  0){
+              var obj = {
+                Duplicate:arr[i],
+                Message:this.ErrorMessage
+              }
+              this.Error.emit(obj)
+            }else{
+             this.Data.push(arr[i])
+            }
+          }
+        }
+      }
+      
+      this.Value.setValue('')
+      this.Output.emit(this.Data)
+    } 
+  }
+ 
+  }
+  RemoveChips(id: any) {
+    this.Data.splice(id,1)
+    this.Output.emit(this.Data)
+  }
+  Edit(index:any) {
+    this.Index = index
+    this.IsEdit = true
+    this.Value.setValue(this.Data[index])
+ }
+ Submitchips(){
+  var s:any = this.Value.value
+  if(s.length > 0){
+    if(this.IsEdit){
+      var match = this.Data.filter(x => x == this.Value.value)
+      if(match.length > 0){
+        var obj = {
+          Duplicate:this.Value.value,
+          Message:this.ErrorMessage
+        }
+        this.Error.emit(obj)
+      }else{
+        this.Data[this.Index] = this.Value.value
+      }
+      this.Index = 0;
+      this.IsEdit = false
+    }else{
+      var str:any = this.Value.value
+      var arr = str.split(',');
+      arr = arr.filter(function (e: any) {
+        return e;
+      });
+      for(let i =0; i < arr.length; i++){
+        if(this.Duplicate){
+          this.Data.push(arr[i])
+        }else{
+          var match = this.Data.filter(x => x == arr[i])
+          if(match.length >  0){
+            var obj = {
+              Duplicate:arr[i],
+              Message:this.ErrorMessage
+            }
+            this.Error.emit(obj)
+          }else{
+           this.Data.push(arr[i])
+          }
+        }
+      }
+    }
+    
+    this.Value.setValue('')
+    this.Output.emit(this.Data)
+  }
+ }
+ onInput() {
+  const inputValue = this.Value.value.toLowerCase();
+  if (inputValue) {
+    this.filteredSuggestions = this.suggestions.filter(suggestion =>
+      suggestion.toLowerCase().includes(inputValue)
+    );
+    this.filteredSuggestion = this.filteredSuggestions[0] || '';
+    this.showSuggestions = this.filteredSuggestions.length > 0;
+  } else {
+    this.filteredSuggestions = [];
+    this.filteredSuggestion = '';
+    this.showSuggestions = false;
+  }
+}
+
+selectSuggestion(suggestion: string) {
+  this.Value.setValue(suggestion);
+  this.Submitchips()
+  this.filteredSuggestion = '';
+  this.showSuggestions = false;
+}
+}
+
+
+--css
+  .scroll_hidden::-webkit-scrollbar {display: none;}
+.scroll_hidden{-ms-overflow-style: none;scrollbar-width: none;}
+.input_style{
+    width: 100%; outline: unset; border: unset;
+    padding: unset;
+    
+    
+}
+
+.autosuggest-container {
+    position: relative;
+    width: 300px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  ul {
+    position: absolute;
+    background: white;
+    width: 100%;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  li {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  li:hover {
+    background-color: #f0f0f0;
+  }
+  
